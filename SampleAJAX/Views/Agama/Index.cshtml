@@ -17,7 +17,7 @@
 <input type="text" id="txtNamaAgama" /><br /><br />
 
 <button type="button" id="btnAgamaById" class="btn btn-default">Get Agama By Id</button>
-<button type="button" id="btnTambahAgama">Tambah Agama</button>
+<button type="button" id="btnTambahAgama" class="btn btn-warning">Tambah Agama</button>
 
 @section scripts{
 
@@ -32,6 +32,10 @@
                 GetAgamaById();
             });
 
+            $("#btnTambahAgama").click(function () {
+                TambahAgama();
+            });
+
             function GetAgamaById() {
                 var url = "http://dev.smart-ics.com:212/myhospital/api/BilDsAgama/GetById";
                 var kode = $("#txtAgamaID").val();
@@ -44,14 +48,37 @@
                         //alert(data.Kode + " " + data.Nama);
                         //alert(data.Nama);
                         $("#txtNamaAgama").val(data.Nama);
+                       
+                    },
+                    error: function (error) {
+                        alert("Error : " + error.Msg);
+                    }
+                });
+            }
+
+            function TambahAgama() {
+                var url = "http://dev.smart-ics.com:212/myhospital/api/BilDsAgama/Save";
+                var kode = $("#txtAgamaID").val();
+                var nama = $("#txtNamaAgama").val();
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { Kode:kode,Nama:nama },
+                    datatype: "json",
+                    success: function (data) {
+                        if (!data.IsValid) {
+                            alert("Error " + data.Msg);
+                        }
+                        else
+                        {
+                            alert("Data " + nama + "berhasil ditambah");
+                        }
                     },
                     error: function (error) {
                         alert("Error : " + error);
                     }
                 });
             }
-
-
 
             function GetData() {
                 var url = "http://dev.smart-ics.com:212/myhospital/api/BilDsAgama/ListAll";
