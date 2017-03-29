@@ -4,6 +4,8 @@
 }
 
 <h2>Coba Ajax</h2>
+<table id="myTable" class="table table-striped">
+</table>
 
 <button id="btnGet" class="btn btn-primary">Get Data</button>
 
@@ -13,7 +15,7 @@
         $(document).ready(function () {
 
             $("#btnGet").click(function () {
-                GetData();
+                GetData2();
             });
 
             function GetData() {
@@ -33,7 +35,32 @@
                 });
             }
 
+            function InsertRow(data) {
+                var newRow = "";
+                newRow += "<tr>";
+                newRow += "<td>" + data.Kode + "</td>";
+                newRow += "<td>" + data.Nama + "</td>";
+                newRow += "</tr>";
+            }
 
+            function GetData2() {
+                var url = "http://dev.smart-ics.com:212/myhospital/api/BilDsAgama/ListAll";
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    datatype: "json",
+                    success: function (data) {
+                        var strResult = "";
+                        $.each(data, function (key, value) {
+                            strResult += value.Kode + " " + value.Nama + "\n";
+                        });
+                        alert("Hasil : \n" + strResult);
+                    },
+                    error: function (error) {
+                        alert("Error : " + error);
+                    }
+                });
+            }
         });
     </script>
 
