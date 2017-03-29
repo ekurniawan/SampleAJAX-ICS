@@ -4,7 +4,12 @@
 }
 
 <h2>Coba Ajax</h2>
+
 <table id="myTable" class="table table-striped">
+    <tr>
+        <th>Kode</th>
+        <th>Nama</th>
+    </tr>
 </table>
 
 <button id="btnGet" class="btn btn-primary">Get Data</button>
@@ -41,6 +46,7 @@
                 newRow += "<td>" + data.Kode + "</td>";
                 newRow += "<td>" + data.Nama + "</td>";
                 newRow += "</tr>";
+                return newRow;
             }
 
             function GetData2() {
@@ -50,11 +56,11 @@
                     url: url,
                     datatype: "json",
                     success: function (data) {
-                        var strResult = "";
+                        var newRow = "";
                         $.each(data, function (key, value) {
-                            strResult += value.Kode + " " + value.Nama + "\n";
+                            newRow += InsertRow(value);
                         });
-                        alert("Hasil : \n" + strResult);
+                        $("#myTable").append(newRow);
                     },
                     error: function (error) {
                         alert("Error : " + error);
