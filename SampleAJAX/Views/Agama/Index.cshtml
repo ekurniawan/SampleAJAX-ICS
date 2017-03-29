@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Coba Ajax</h2>
+
+<button id="btnGet" class="btn btn-primary">Get Data</button>
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+
+            $("#btnGet").click(function () {
+                GetData();
+            });
+
+            function GetData() {
+                var url = "http://dev.smart-ics.com:212/myhospital/api/BilDsAgama/ListAll";
+                $.getJSON(url, function (result) {
+                    if (result) {
+                        var data = result;
+                        var strResult = "";
+                        $.each(data, function (key, value) {
+                            strResult += value.Kode + " " + value.Nama + "\n";
+                        });
+                        alert("Hasil : \n" + strResult);
+                    }
+                    else {
+                        alert("Gagal download data !")
+                    };
+                });
+            }
+
+
+        });
+    </script>
+
+}
+
