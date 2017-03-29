@@ -6,10 +6,6 @@
 <h2>Coba Ajax</h2>
 
 <table id="myTable" class="table table-striped">
-    <tr>
-        <th>Kode</th>
-        <th>Nama</th>
-    </tr>
 </table>
 
 <button id="btnGet" class="btn btn-primary">Get Data</button>
@@ -50,6 +46,9 @@
             }
 
             function GetData2() {
+                $("#myTable tr").remove();
+                $("#myTable").append("<tr><th>Kode</th><th>Nama</th></tr>");
+
                 var url = "http://dev.smart-ics.com:212/myhospital/api/BilDsAgama/ListAll";
                 $.ajax({
                     type: "GET",
