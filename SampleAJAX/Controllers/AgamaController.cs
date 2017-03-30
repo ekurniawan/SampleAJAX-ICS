@@ -13,5 +13,10 @@ namespace SampleAJAX.Controllers
         {
             return View();
         }
+
+        public ActionResult SampleJQueryUI()
+        {
+            return View();
+        }
     }
 }
