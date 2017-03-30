@@ -3,17 +3,112 @@
     ViewBag.Title = "SampleJQueryUI";
 }
 <link rel="stylesheet" href="~/Content/themes/base/jquery-ui.css" />
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+
 
 <h2>SampleJQueryUI</h2>
 
 <label for="txtDate">Pilih Tanggal :</label>
 <input type="text" id="txtDate" /><br /><br />
+<hr />
+<label for="txtAgama">Pilih Agama :</label>
+<input id="txtAgama" /> 
+<button type="button" id="btnCek" class="btn btn-default">Cek</button>
+<br /><br />
+
+<div id="gridAgama"></div>
+
 
 @section scripts{
     <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
     <script>
         $(document).ready(function () {
             $("#txtDate").datepicker();
+
+            
+
+            var dataArr = new Array();
+            var dataNama = [];
+            var url = "http://dev.smart-ics.com:212/myhospital/api/BilDsAgama/ListAll";
+            $.ajax({
+                type: "GET",
+                url: url,
+                datatype: "json",
+                success: function (data) {
+                    $.each(data, function (key, value) {
+                        dataArr.push({ "Kode": value.Kode, "Nama": value.Nama });
+                        dataNama.push(value.Nama);
+                    });
+                    InisialisasiGrid(data);
+                },
+                error: function (error) {
+                    alert("Error : " + error);
+                }
+            });
+
+
+            function InisialisasiGrid(data) {
+                $("#gridAgama").jsGrid({
+                    width: "100%",
+                    height: "300px",
+                    sorting: true,
+                    paging: true,
+                    data: data,
+                    pageSize: 8,
+                    pageButtonCount: 5,
+                    inserting: true,
+                    editing: true,
+                    controller:{
+                        updateItem: function (item) {
+                            SaveData(item);
+                        },
+                        insertItem: function (item) {
+                            SaveData(item);
+                        }
+                    },
+                    fields: [
+                        { name: "Kode", type: "text" },
+                        { name: "Nama", type: "text" },
+                        { type: "control" }
+                    ]
+                });
+            }
+            
+            function SaveData(item) {
+                var url = "http://dev.smart-ics.com:212/myhospital/api/BilDsAgama/Save";
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: item,
+                    datatype: "json",
+                    success: function (data) {
+                        if (!data.IsValid) {
+                            console.log("Error " + data.Msg);
+                        }
+                        else {
+                            console.log("Data " + nama + "berhasil ditambah");
+                        }
+                    },
+                    error: function (error) {
+                        console.log("Error : " + error);
+                    }
+                });
+            }
+
+            $("#txtAgama").autocomplete({ source: dataNama });
+
+            $("#btnCek").click(function () {
+                var nama = $("#txtAgama").val();
+                $.each(dataArr, function (key, value) {
+                    if (value.Nama == nama) {
+                        alert(value.Kode);
+                        return;
+                    }
+                });
+                
+            });
         });
     </script>
 }
